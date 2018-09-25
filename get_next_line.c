@@ -6,7 +6,7 @@
 /*   By: abao <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/01 17:39:15 by abao              #+#    #+#             */
-/*   Updated: 2018/09/24 17:40:00 by abao             ###   ########.fr       */
+/*   Updated: 2018/09/25 14:32:55 by abao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,9 @@ int	get_next_line(const int fd, char **line)
 	char	buf[BUFF_SIZE + 1];
 	char	*newline;
 	int		x;
+	int		mark;
 
+	mark = 0;
 	if (fd < 0 || line == NULL)
 		return (-1);
 	*line = malloc(sizeof(char) * BUFF_SIZE);
@@ -40,8 +42,9 @@ int	get_next_line(const int fd, char **line)
 			break ;
 		}
 		ft_strclr(buf);
+		mark = 1;
 	}
-	if (x == 0)
+	if (x == 0 && ft_strchr(*line, '\0') != NULL && mark != 1)
 		return (0);
 	if (x == -1)
 		return (-1);
