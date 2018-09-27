@@ -6,7 +6,7 @@
 /*   By: abao <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/01 17:39:15 by abao              #+#    #+#             */
-/*   Updated: 2018/09/25 14:32:55 by abao             ###   ########.fr       */
+/*   Updated: 2018/09/27 13:52:29 by abao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,27 +20,39 @@
 #include <stdlib.h>
 #include "get_next_line.h"
 
-int	get_next_line(const int fd, char **line)
+char	*test_newline(char *buf, char **line)
+{
+	char	*newline;
+
+	newline = ft_strchr(buf, '\n');
+	if (newline != NULL)
+	{
+		ft_strreplace(*line, '\n', '\0');
+		return (newline);
+	}
+	return (NULL);
+}
+
+int		get_next_line(const int fd, char **line)
 {
 	char	buf[BUFF_SIZE + 1];
-	char	*newline;
 	int		x;
 	int		mark;
+//	char	*tmp;
 
 	mark = 0;
 	if (fd < 0 || line == NULL)
 		return (-1);
-	*line = malloc(sizeof(char) * BUFF_SIZE);
+	*line = (char*)malloc(sizeof(char) * BUFF_SIZE);
 	while ((x = read(fd, buf, BUFF_SIZE)) > 0)
 	{
 		buf[x] = '\0';
 		*line = ft_strjoin(*line, buf);
-		newline = ft_strchr(buf, '\n');
-		if (newline != NULL)
-		{
-			ft_strreplace(*line, '\n', '\0');
+//		tmp = *line; //These three lines keep fucking up everything
+//		free(*line); //If I don't free it, it leaks
+//		*line = tmp; //If I do, it doesn't work
+		if (test_newline(buf, line) != NULL)
 			break ;
-		}
 		ft_strclr(buf);
 		mark = 1;
 	}
