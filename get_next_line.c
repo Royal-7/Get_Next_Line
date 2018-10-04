@@ -6,7 +6,7 @@
 /*   By: abao <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/01 17:39:15 by abao              #+#    #+#             */
-/*   Updated: 2018/09/27 13:52:29 by abao             ###   ########.fr       */
+/*   Updated: 2018/10/03 19:32:05 by abao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,45 +20,61 @@
 #include <stdlib.h>
 #include "get_next_line.h"
 
-char	*test_newline(char *buf, char **line)
+int		find_return(char *tmp, char **line, int fd, int x)
 {
-	char	*newline;
+	char	*tmp2;
+	int		len;
 
-	newline = ft_strchr(buf, '\n');
-	if (newline != NULL)
+	len = 0;
+	while (tmp[len] != '\n' && tmp[len] != '\0')
+		len++;
+	if (tmp[len] == '\n')
 	{
-		ft_strreplace(*line, '\n', '\0');
-		return (newline);
+		*line = ft_strsub(tmp, 0, len);
+		tmp2 = ft_strdup(tmp + len + 1);
+		free(tmp);
+		tmp = tmp2;
+		if (tmp[0] == '\0')
+			ft_strdel(&tmp);
 	}
-	return (NULL);
+//	else if (tmp[len] == '\0')
+//	{
+//		if (x == BUFF_SIZE)
+//			return (get_next_line(fd, line));
+//		*line = ft_strdup(tmp);
+//		ft_strdel(&tmp);
+//	}
+	return (1);
 }
 
 int		get_next_line(const int fd, char **line)
 {
 	char	buf[BUFF_SIZE + 1];
 	int		x;
-	int		mark;
-//	char	*tmp;
+//	int		mark;
+	char	*tmp;
+//	char	*tmp2;
 
-	mark = 0;
+//	mark = 0;
 	if (fd < 0 || line == NULL)
 		return (-1);
-	*line = (char*)malloc(sizeof(char) * BUFF_SIZE);
+	tmp = (char*)malloc(sizeof(char) * BUFF_SIZE);
 	while ((x = read(fd, buf, BUFF_SIZE)) > 0)
 	{
 		buf[x] = '\0';
-		*line = ft_strjoin(*line, buf);
-//		tmp = *line; //These three lines keep fucking up everything
-//		free(*line); //If I don't free it, it leaks
-//		*line = tmp; //If I do, it doesn't work
-		if (test_newline(buf, line) != NULL)
+		tmp = ft_strjoin(tmp, buf);
+		if (ft_strchr(buf, '\n') != NULL)
+		{
+			ft_strreplace(tmp, '\n', '\0');
 			break ;
+		}
 		ft_strclr(buf);
-		mark = 1;
+//		mark = 1;
 	}
-	if (x == 0 && ft_strchr(*line, '\0') != NULL && mark != 1)
+	*line = tmp;
+	if (x == 0 && ft_strchr(*line, '\0') != NULL)
 		return (0);
 	if (x == -1)
 		return (-1);
-	return (1);
+	return (find_return(tmp, line, fd, x));
 }
