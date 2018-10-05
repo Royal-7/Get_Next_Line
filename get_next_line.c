@@ -6,7 +6,7 @@
 /*   By: abao <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/01 17:39:15 by abao              #+#    #+#             */
-/*   Updated: 2018/10/04 19:25:22 by abao             ###   ########.fr       */
+/*   Updated: 2018/10/04 19:53:54 by abao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,23 +20,25 @@
 #include <stdlib.h>
 #include "get_next_line.h"
 
-int		find_return(char *tmp, char **line)
-{
-	char	*tmp2;
-	int		len;
-
-	len = 0;
-	while (tmp[len] != '\n' && tmp[len] != '\0')
-		len++;
-	if (tmp[len] == '\n')
-	{
-		*line = ft_strsub(tmp, 0, len);
-		tmp2 = ft_strdup(tmp + len + 1);
-		free(tmp);
-		tmp = tmp2;
-		if (tmp[0] == '\0')
-			ft_strdel(&tmp);
-	}
+//int		find_return(char *tmp, char **line) //Having this changed nothing.
+//{
+//	char	*tmp2;
+//	int		len;
+//
+//	len = 0;
+//	while (tmp[len] != '\n' && tmp[len] != '\0')
+//		len++;
+//	if (tmp[len] == '\n')
+//	{
+//		*line = ft_strsub(tmp, 0, len);
+//		tmp2 = ft_strdup(tmp + len + 1);
+//		free(tmp);
+//		tmp = tmp2;
+//		if (tmp[0] == '\0')
+//			ft_strdel(&tmp);
+//	}
+//	free(tmp); //Freeing these cause errors and do not clear up the leaks.
+//	free(tmp2);
 //	else if (tmp[len] == '\0')
 //	{
 //		if (x == BUFF_SIZE)
@@ -44,8 +46,8 @@ int		find_return(char *tmp, char **line)
 //		*line = ft_strdup(tmp);
 //		ft_strdel(&tmp);
 //	}
-	return (1);
-}
+//	return (1);
+//}
 
 int		get_next_line(const int fd, char **line)
 {
@@ -76,5 +78,6 @@ int		get_next_line(const int fd, char **line)
 		return (0);
 	if (x == -1)
 		return (-1);
-	return (find_return(tmp, line));
+//	return (find_return(tmp, line));
+	return (1);
 }
