@@ -6,7 +6,7 @@
 /*   By: abao <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/01 17:39:15 by abao              #+#    #+#             */
-/*   Updated: 2018/10/03 19:32:05 by abao             ###   ########.fr       */
+/*   Updated: 2018/10/04 19:25:22 by abao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include "get_next_line.h"
 
-int		find_return(char *tmp, char **line, int fd, int x)
+int		find_return(char *tmp, char **line)
 {
 	char	*tmp2;
 	int		len;
@@ -51,11 +51,11 @@ int		get_next_line(const int fd, char **line)
 {
 	char	buf[BUFF_SIZE + 1];
 	int		x;
-//	int		mark;
+	int		mark;
 	char	*tmp;
 //	char	*tmp2;
 
-//	mark = 0;
+	mark = 0;
 	if (fd < 0 || line == NULL)
 		return (-1);
 	tmp = (char*)malloc(sizeof(char) * BUFF_SIZE);
@@ -69,12 +69,12 @@ int		get_next_line(const int fd, char **line)
 			break ;
 		}
 		ft_strclr(buf);
-//		mark = 1;
+		mark = 1;
 	}
 	*line = tmp;
-	if (x == 0 && ft_strchr(*line, '\0') != NULL)
+	if (x == 0 && ft_strchr(*line, '\0') != NULL && mark != 1)
 		return (0);
 	if (x == -1)
 		return (-1);
-	return (find_return(tmp, line, fd, x));
+	return (find_return(tmp, line));
 }
