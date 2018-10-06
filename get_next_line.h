@@ -6,7 +6,7 @@
 /*   By: abao <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/04 13:49:40 by abao              #+#    #+#             */
-/*   Updated: 2018/09/29 13:43:48 by abao             ###   ########.fr       */
+/*   Updated: 2018/10/06 16:07:59 by abao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-# define BUFF_SIZE 1
+# define BUFF_SIZE 5
 
 int		get_next_line(const int fd, char **line);
 
