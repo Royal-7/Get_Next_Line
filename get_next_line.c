@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: abao <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/09/01 17:39:15 by abao              #+#    #+#             */
-/*   Updated: 2018/10/06 16:53:20 by abao             ###   ########.fr       */
+/*   Created: 2018/10/08 13:01:45 by abao              #+#    #+#             */
+/*   Updated: 2018/10/08 19:09:31 by abao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,44 +20,51 @@
 #include <stdlib.h>
 #include "get_next_line.h"
 
-int		function(int fd, char **buf, static char *a)
+char	*read_file(int fd, char *buf, int *x)
 {
-	char	buffer[BUFF_SIZE + 1];
-	char 	*tmp;
-	int		x;
+	char		tmp[BUFF_SIZE + 1];
+	char		*tmp2;
 
-	ft_strclr(buffer);
-	tmp = ft_strnew(BUFF_SIZE + 1);
-	while ((x = read(fd, buffer, BUFF_SIZE)) > 0)
-	{
-		buffer[x] = '\0';
-		tmp = ft_strjoin(tmp, buffer);
-		if ((a = ft_strchr(buffer, '\n')) != NULL)
-		{
-			ft_strreplace(tmp, '\n', '\0');
-			break ;
-		}
-		ft_strclr(buffer);
-	}
-	*buf = tmp;
-	printf("buf = %s\n", *buf);
-	free(tmp);
-	return (x);
+	*x = read(fd, tmp, BUFF_SIZE);
+	tmp[*x] = '\0';
+	tmp2 = buf;
+	if (!(buf = ft_strjoin(buf, tmp)))
+		return (NULL);
+	ft_strdel(&tmp2);
+	return (buf);
+}
+
+int		ft_get_end(char **line, char *buf)
+{
+	if (!(*line = ft_strdup(buf)))
+		return (-1);
+	ft_strclr(buf);
+	return (1);
 }
 
 int		get_next_line(const int fd, char **line)
 {
-	static char	*a;
-	char	*buf;
-	int		x;
+	static char	*buf = "";
+	char		*str;
+	int			x;
 
-	if (fd < 0 || line == NULL)
+	x = 1;
+	if (!line || fd < 0 || (buf[0] == '\0' && (!(buf = ft_strnew(0)))))
 		return (-1);
-	x = function(fd, &buf, a);
-	*line = buf;
-	if (x == 0 && ft_strchr(*line, '\0') != NULL)
-		return (0);
-	if (x == -1)
-		return (-1);
-	return (1);
+	while (x > 0)
+	{
+		if ((str = ft_strchr(buf, '\n')) != NULL)
+		{
+			*str = '\0';
+			if (!(*line = ft_strdup(buf)))
+				return (-1);
+			ft_memmove(buf, str + 1, ft_strlen(str + 1) + 1);
+			return (1);
+		}
+		buf = read_file(fd, buf, &x);
+	}
+	ft_strdel(&str);
+	if (x == 0 && ft_strlen(buf))
+		x = ft_get_end(line, buf);
+	return (x);
 }
