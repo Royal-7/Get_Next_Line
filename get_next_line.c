@@ -6,7 +6,7 @@
 /*   By: abao <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/09 09:58:36 by abao              #+#    #+#             */
-/*   Updated: 2018/10/12 17:21:23 by abao             ###   ########.fr       */
+/*   Updated: 2018/10/14 15:27:36 by abao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 
 int		read_line(const int fd, int *x, char **buf)
 {
-	char	tmp[BUFF_SIZE + 1];
-	char	*tmp2;
-
-   	*x = read(fd, tmp, BUFF_SIZE);
+	char		tmp[BUFF_SIZE + 1];
+	char		*tmp2;
+	
+	*x = read(fd, tmp, BUFF_SIZE);
 	tmp[*x] = '\0';
 	tmp2 = *buf;
 	*buf = ft_strjoin(*buf, tmp);
@@ -37,12 +37,12 @@ int		get_end(char **line, char *buf)
 
 int		get_next_line(const int fd, char **line)
 {
-	static char	*buf;
-	int		x;
-	char	*find;
+	static char	*buf = "";
+	int			x;
+	char		*find;
 
 	x = 1;
-	if (fd < 0 || line == NULL || (!(buf = ft_strnew(0))))
+	if (fd < 0 || line == NULL || (buf[0] == '\0' && (!(buf = ft_strnew(0)))))
 		return (-1);
 	while (x > 0)
 	{
@@ -61,4 +61,3 @@ int		get_next_line(const int fd, char **line)
 		x = get_end(line, buf);
 	return (x);
 }
-
