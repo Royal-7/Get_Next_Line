@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: abao <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/09 09:58:36 by abao              #+#    #+#             */
-/*   Updated: 2018/10/14 15:27:36 by abao             ###   ########.fr       */
+/*   Created: 2018/10/15 19:36:45 by abao              #+#    #+#             */
+/*   Updated: 2018/10/15 19:36:48 by abao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,50 +14,50 @@
 #include <stdlib.h>
 #include "get_next_line.h"
 
-int		read_line(const int fd, int *x, char **buf)
+int	read_line(char **buf, char *str, int fd)
 {
-	char		tmp[BUFF_SIZE + 1];
-	char		*tmp2;
-	
-	*x = read(fd, tmp, BUFF_SIZE);
-	tmp[*x] = '\0';
-	tmp2 = *buf;
-	*buf = ft_strjoin(*buf, tmp);
-	ft_strdel(&tmp2);
-	return (*x);
+	int			x;
+	char		*tmp;
+
+	x = read(fd, str, BUFF_SIZE);
+	str[x] = '\0';
+	tmp = buf[fd];
+	buf[fd] = ft_strjoin(buf[fd], str);
+	ft_strdel(&tmp);
+	return (x);
 }
 
-int		get_end(char **line, char *buf)
+int	get_end(char **line, int fd, char **buf)
 {
-	if (!(*line = ft_strdup(buf)))
-		return (-1);
-	ft_strclr(buf);
+	*line = ft_strdup(buf[fd]);
+	ft_strdel(&buf[fd]);
 	return (1);
 }
 
-int		get_next_line(const int fd, char **line)
+int	get_next_line(const int fd, char **line)
 {
-	static char	*buf = "";
-	int			x;
+	static char	*buf[255];
+	char		str[BUFF_SIZE + 1];
 	char		*find;
+	int			x;
 
 	x = 1;
-	if (fd < 0 || line == NULL || (buf[0] == '\0' && (!(buf = ft_strnew(0)))))
+	if (fd < 0 || line == NULL)
 		return (-1);
+	if (buf[fd] == NULL)
+		buf[fd] = ft_strnew(1);
 	while (x > 0)
 	{
-		if ((find = ft_strchr(buf, '\n')) != NULL)
+		if ((find = ft_strchr(buf[fd], '\n')) != NULL)
 		{
 			*find = '\0';
-			if (!(*line = ft_strdup(buf)))
-				return (1);
-			ft_memmove(buf, find + 1, ft_strlen(find + 1) + 1);
+			*line = ft_strdup(buf[fd]);
+			ft_memmove(buf[fd], find + 1, ft_strlen(find + 1) + 1);
 			return (1);
 		}
-		x = read_line(fd, &x, &buf);
+		x = read_line(buf, str, fd);
 	}
-	ft_strdel(&find);
-	if (x == 0 && (ft_strlen(buf) > 0))
-		x = get_end(line, buf);
-	return (x);
+	if ((x == 0 && (buf[fd] == NULL || buf[fd][0] == '\0')) || (x < 0))
+		return (x);
+	return (get_end(line, fd, buf));
 }
