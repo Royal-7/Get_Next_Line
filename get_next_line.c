@@ -6,7 +6,7 @@
 /*   By: abao <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/15 19:36:45 by abao              #+#    #+#             */
-/*   Updated: 2018/10/15 19:36:48 by abao             ###   ########.fr       */
+/*   Updated: 2018/10/19 14:41:19 by abao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,13 @@ int	get_end(char **line, int fd, char **buf)
 
 int	get_next_line(const int fd, char **line)
 {
-	static char	*buf[255];
+	static char	*buf[4864];
 	char		str[BUFF_SIZE + 1];
 	char		*find;
 	int			x;
 
 	x = 1;
-	if (fd < 0 || line == NULL)
+	if (fd < 0 || line == NULL || fd > 4863)
 		return (-1);
 	if (buf[fd] == NULL)
 		buf[fd] = ft_strnew(1);
